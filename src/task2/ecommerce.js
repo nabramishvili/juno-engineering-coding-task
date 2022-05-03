@@ -3,13 +3,25 @@ import { allIds, fetchOrderById } from "../api";
 
 ////////////////////////////////// Your code tasks is below //////////////////////////////////////////////////////
 
-export const fetchAllOrders = () => {
+const memoizedFetchAllOrders = () => {
+    let cachedOrders
     const ids = allIds;
-    const orders = ids.map(fetchOrderById)
-    return Promise.all(orders)
+    return async () => {
+        if (cachedOrders) {
+          return cachedOrders;
+        }
+        else {
+          const ordersPromises = ids.map(fetchOrderById)
+          const orders = await Promise.all(ordersPromises)
+          cachedOrders = orders
+          return orders;
+        }
+      }
     // .....
     //   1. TODO: fetch all ids using the "fetchOrderById" and the given ids, make it work as efficient and clean as possible.
 };
+
+export const fetchAllOrders = memoizedFetchAllOrders();
 
 export const bucketOrdersByUsers = async () => {
     let ordersByUsers = {};

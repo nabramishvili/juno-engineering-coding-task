@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { fetchImage, fetchImageUrls } from "../api/index";
 import CircularProgress from '@mui/material/CircularProgress';
 import { Box } from "@mui/system";
@@ -11,10 +11,10 @@ const ImageCarousel = (props) => {
     const [imageIndex, setImageIndex] = useState(0)
     const [imageFetched, setImageFetched] = useState(0)
 
-    const imagesExists = useMemo(() => imageUrls.length > 0, [imageUrls.length])
+    const imagesExists = imageUrls.length > 0
 
-    const getNextIndex = useCallback(index => index + 1 < imageUrls.length ? index + 1 : 0, [imageUrls.length])
-    const gePreviusIndex = useCallback(index => index - 1 >= 0 ? index - 1 : imageUrls.length - 1, [imageUrls.length])
+    const getNextIndex = index => index + 1 < imageUrls.length ? index + 1 : 0
+    const gePreviusIndex = index => index - 1 >= 0 ? index - 1 : imageUrls.length - 1
 
     useEffect(() => {
         fetchUrls()
@@ -31,7 +31,7 @@ const ImageCarousel = (props) => {
         }
     }, [imagesExists, imageIndex])
 
-    const fetchUrls = useCallback(async () => {
+    const fetchUrls = async () => {
         try {
             const urls = await fetchImageUrls()
             setImageUrls(urls)
@@ -39,25 +39,24 @@ const ImageCarousel = (props) => {
         } catch(e) {
             console.error('Error fetching urls:', e)
         }
-    }, [setImageUrlsLoaded, setImageUrls])
-    return <div className="carousel_wrapper">
-        <div className="carousel">
-            {!imageUrlsLoaded && <CircularProgress /> }
-            {imageUrlsLoaded && !imagesExists && <div className="carousel__empty">
-                Images not found
-            </div> }
-            {imagesExists && <div className="carousel__content">
-                <Button onClick={() => setImageIndex(gePreviusIndex(imageIndex))} variant="outlined">
-                    Prev
-                </Button>
-                <div className="carousel__img-wrapper">
-                    {imageFetched ? <img alt="img" src={imageUrls[imageIndex]} /> : <CircularProgress />}
-                </div>
-                <Button onClick={() => setImageIndex(getNextIndex(imageIndex))} variant="outlined">
-                    Next
-                </Button>
-            </div> }
+    }
+
+    if (!imageUrlsLoaded) return <CircularProgress />
+
+    if (imageUrlsLoaded && !imagesExists) return <div className="carousel__empty">
+        Images not found
+    </div>
+
+    return <div className="carousel__content">
+        <Button onClick={() => setImageIndex(gePreviusIndex(imageIndex))} variant="outlined">
+            Prev
+        </Button>
+        <div className="carousel__img-wrapper">
+            {imageFetched ? <img alt="img" src={imageUrls[imageIndex]} /> : <CircularProgress />}
         </div>
-    </div>;
+        <Button onClick={() => setImageIndex(getNextIndex(imageIndex))} variant="outlined">
+            Next
+        </Button>
+    </div>
 };
 export default ImageCarousel;

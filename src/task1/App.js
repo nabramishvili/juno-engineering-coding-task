@@ -4,8 +4,10 @@ import ImageCarousel from "./ImageCarousel";
 
 function App() {
   return (
-      <div>
-        <ImageCarousel />
+      <div className="carousel_wrapper">
+        <div className="carousel">
+          <ImageCarousel />
+        </div>
       </div>
   );
 }

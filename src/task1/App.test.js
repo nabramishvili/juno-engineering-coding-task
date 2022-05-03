@@ -13,7 +13,12 @@ beforeEach(() => {
     }
     jest.spyOn(api, 'fetchImageUrls')
         .mockImplementation(
-            () => new Promise((resolve) => setTimeout(() => resolve(['https://images.unsplash.com/photo-1', 'https://images.unsplash.com/photo-2', 'https://images.unsplash.com/photo-3']), 200))
+            () => new Promise((resolve) => setTimeout(
+              () => resolve( [
+                'https://images.unsplash.com/photo-1', 
+                'https://images.unsplash.com/photo-2', 
+                'https://images.unsplash.com/photo-3'] ), 
+              200))
         );
 });
 
