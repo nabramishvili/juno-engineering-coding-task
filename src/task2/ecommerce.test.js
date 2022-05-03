@@ -1,7 +1,24 @@
-import { fetchOrderById } from "../api";
+import { bucketOrdersByUsers, fetchAllOrders, getLast2WeeksOrders, bucketOrdersByDate } from "./ecommerce";
 
-const ORDER_ID = "70ef599e5eca171b2bce84d1"
-test("Ecommerce - fetchOrderById", async () => {
-    let orders = await fetchOrderById(ORDER_ID);
-    expect(orders).toBeTruthy();
+test("Ecommerce - fetchAllOrders is array", async () => {
+    let orders = await fetchAllOrders();
+    expect(Array.isArray(orders)).toBe(true);
 });
+
+test("Ecommerce - bucketOrdersByUsers is object", async () => {
+    let orders = await bucketOrdersByUsers();
+    expect( typeof orders).toBe('object');
+});
+
+test("Ecommerce - getLast2WeeksOrders is array", async () => {
+    let orders = await getLast2WeeksOrders();
+    expect(Array.isArray(orders)).toBe(true);
+});
+
+test("Ecommerce - bucketOrdersByDate is object", async () => {
+    let orders = await bucketOrdersByDate();
+    expect( typeof orders).toBe('object');
+});
+
+
+
